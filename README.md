@@ -90,9 +90,3 @@ This application uses browser local storage to persist your data. No server or d
 
 ## Hackathon Project
 This project was created for a hackathon, focusing on developer productivity tools.
-
-## License
-MIT
-
-
-npx serve
