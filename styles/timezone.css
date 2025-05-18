@@ -1,0 +1,157 @@
+/* Timezone Converter specific styles */
+
+.timezone-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.timezone-input,
+.timezone-output {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.timezone-equals {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 0 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.timezone-equals:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+#from-timezone,
+#to-timezone {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    appearance: auto;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+}
+
+/* Ensure options in the dropdown have proper contrast in dark mode */
+#from-timezone option,
+#to-timezone option {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Custom styles for dark mode select dropdowns */
+:root.dark-theme #from-timezone,
+:root.dark-theme #to-timezone {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Ensure dropdown options are styled correctly in dark mode */
+:root.dark-theme #from-timezone option,
+:root.dark-theme #to-timezone option {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Time difference display */
+#time-diff-display {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+#time-input,
+#time-output {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+#time-output {
+    background-color: var(--card-bg);
+    border: 1px dashed var(--border-color);
+}
+
+/* Additional timezone conversion section styles */
+.timezone-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.time-copy-btn {
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.time-copy-btn:hover {
+    opacity: 1;
+}
+
+/* Time format options */
+.time-format-options {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.time-format-option {
+    padding: 0.35rem 0.8rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-format-option:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    border-color: var(--primary-color);
+}
+
+.time-format-option.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Time difference display styling */
+#time-diff-display {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--accent-color);
+    font-weight: 500;
+    border-top: 1px dashed var(--border-color);
+}

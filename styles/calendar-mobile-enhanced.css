@@ -1,0 +1,150 @@
+/* Additional CSS for enhanced mobile scrolling and accessibility */
+
+/* Improved mobile scrolling */
+@media (max-width: 768px) {
+    .calendar-container {
+        scroll-snap-type: y proximity;
+        -webkit-overflow-scrolling: touch; /* For iOS momentum scrolling */
+        overscroll-behavior: contain; /* Prevent pull-to-refresh */
+        touch-action: pan-y; /* Better touch behavior */
+    }
+    
+    .time-cell {
+        scroll-snap-align: start;
+        height: 70px; /* Slightly taller on mobile for easier touch */
+    }
+    
+    /* Optimize mobile scrolling with hardware acceleration */
+    .calendar-grid {
+        will-change: transform;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    /* Improve touch targets */
+    .calendar-task {
+        min-height: 44px; /* Minimum size for touch targets */
+    }
+    
+    .calendar-task-actions {
+        display: none; /* Hide by default on mobile */
+    }
+    
+    .calendar-task.active .calendar-task-actions {
+        display: flex; /* Show when active */
+    }
+    
+    /* Enhanced touch feedback */
+    .calendar-task:active {
+        transform: scale(0.98);
+        transition: transform 0.1s;
+    }
+}
+
+/* Accessibility enhancements */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+.calendar-task:focus,
+.time-cell:focus,
+.calendar-container:focus,
+.day-column:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    z-index: 5;
+}
+
+/* High contrast mode improvements */
+@media (forced-colors: active) {
+    .calendar-task {
+        border: 2px solid CanvasText;
+    }
+    
+    .current-time-indicator {
+        border: 2px solid Highlight;
+    }
+}
+
+/* Shortcut tooltip styles */
+.shortcuts-tooltip {
+    max-width: 350px;
+}
+
+.shortcut-item {
+    opacity: 0.9;
+}
+
+.shortcut-item:hover {
+    opacity: 1;
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Skip to current day link for keyboard users */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    padding: 8px;
+    background: var(--primary-color);
+    color: white;
+    z-index: 100;
+    transition: top 0.2s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Improved animation for current time indicator */
+@keyframes pulseTime {
+    0% {
+        opacity: 0.7;
+        box-shadow: 0 0 5px rgba(var(--accent-color-rgb), 0.3);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.8);
+    }
+    100% {
+        opacity: 0.7;
+        box-shadow: 0 0 5px rgba(var(--accent-color-rgb), 0.3);
+    }
+}
+
+/* Fade in animation for events */
+@keyframes fadeInEvent {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calendar-task {
+    animation: fadeInEvent 0.3s ease forwards;
+}
