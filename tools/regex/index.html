@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Tester - CodeCircuit</title>
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="styles/regex.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>CodeCircuit</h1>
+            <p>Developer Productivity Tools</p>
+        </div>
+        <div class="theme-switch-container">
+            <span class="theme-label">
+                <i class="fas fa-sun theme-icon"></i>
+                <span class="theme-text">Light</span>
+            </span>
+            <label class="theme-switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="theme-label">
+                <span class="theme-text">Dark</span>
+                <i class="fas fa-moon theme-icon"></i>
+            </span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Back to Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Regex Tester -->
+        <section class="tool-section active" id="regex">
+            <div class="tool-header">
+                <h2>Regex Tester</h2>
+                <p>Test regular expressions with color-coded match highlights</p>
+            </div>
+            <div class="tool-content">
+                <div class="regex-container">
+                    <div class="regex-input">
+                        <div class="regex-pattern">
+                            <span>/</span>
+                            <input type="text" id="regex-pattern" placeholder="Enter your regex pattern...">
+                            <span>/</span>
+                            <input type="text" id="regex-flags" placeholder="flags" maxlength="5">
+                        </div>
+                        <textarea id="regex-test-input" placeholder="Enter text to test against the regex..."></textarea>
+                    </div>
+                    <div class="regex-output">
+                        <div class="regex-results">
+                            <h3>Results</h3>
+                            <div id="regex-match-count">No matches found</div>
+                            <div id="regex-highlighted"></div>
+                        </div>
+                        <div class="regex-matches">
+                            <h3>Matches</h3>
+                            <div id="regex-matches-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CodeCircuit - Hackathon Project</p>
+    </footer>
+
+    <script src="../../scripts/theme-switcher.js"></script>
+    <script src="../../scripts/style-helpers.js"></script>
+    <script src="scripts/regex.js"></script>
+</body>
+</html>

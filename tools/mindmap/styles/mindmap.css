@@ -1,0 +1,110 @@
+/* Mind Map Specific Styles */
+.mindmap-container {
+    min-height: 600px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    overflow: auto;
+    position: relative;
+    background-color: var(--light-bg);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    display: block !important; /* Ensure it's displayed as block */
+    width: 100%;
+    height: 500px;
+    margin-top: 20px;
+}
+
+.mindmap-node {
+    position: absolute;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+    z-index: 10;
+    animation: fadeIn 0.4s ease;
+    min-width: 120px;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Root node styling */
+.mindmap-node.root-node {
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.mindmap-node:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mindmap-node.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.6);
+    outline: 2px solid white;
+}
+
+.mindmap-node-content {
+    width: 100%;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.mindmap-node-edit {
+    background: white;
+    border: none;
+    padding: 5px;
+    width: 90%;
+    text-align: center;
+    border-radius: 4px;
+    color: #333;
+}
+
+.mindmap-node.dragging {
+    opacity: 0.8;
+    z-index: 100;
+}
+
+.mindmap-connections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.mindmap-connection {
+    stroke: var(--accent-color);
+    stroke-width: 2px;
+}
+
+.mindmap-connection.highlighted {
+    stroke: var(--primary-color);
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 3px var(--primary-color));
+}
+
+.mindmap-search-highlight {
+    box-shadow: 0 0 10px var(--accent-color);
+    animation: highlightPulse 1.5s infinite alternate;
+}
+
+@keyframes highlightPulse {
+    from { box-shadow: 0 0 5px var(--accent-color); }
+    to { box-shadow: 0 0 15px var(--accent-color); }
+}

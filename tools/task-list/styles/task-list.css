@@ -1,0 +1,5 @@
+/* Create a tool CSS file for each tool */
+.task-list.css, .sticky-notes.css, .pomodoro.css, .markdown.css, .json-viewer.css, .regex.css, .snippets.css {
+    /* Default styles specific to each tool */
+    padding: 1rem;
+}

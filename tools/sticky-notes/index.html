@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes - CodeCircuit</title>
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="styles/sticky-notes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>CodeCircuit</h1>
+            <p>Developer Productivity Tools</p>
+        </div>
+        <div class="theme-switch-container">
+            <span class="theme-label">
+                <i class="fas fa-sun theme-icon"></i>
+                <span class="theme-text">Light</span>
+            </span>
+            <label class="theme-switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="theme-label">
+                <span class="theme-text">Dark</span>
+                <i class="fas fa-moon theme-icon"></i>
+            </span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Back to Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Sticky Notes -->
+        <section class="tool-section active" id="sticky-notes">
+            <div class="tool-header">
+                <h2>Sticky Notes</h2>
+                <p>Create and manage editable note tiles</p>
+                <div class="shortcuts-info">
+                    <button id="show-note-shortcuts" class="help-btn" title="View Keyboard Shortcuts">
+                        <i class="fas fa-keyboard"></i> Keyboard Shortcuts
+                    </button>
+                    <div class="shortcuts-tooltip" id="note-shortcuts-tooltip">
+                        <h4>Keyboard Shortcuts</h4>
+                        <ul>
+                            <li><kbd>Ctrl</kbd> + <kbd>N</kbd> - Create new note</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> - Delete focused note</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>Space</kbd> - Change note color</li>
+                        </ul>
+                        <div class="tooltip-arrow"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tool-content">
+                <div class="sticky-notes-controls">
+                    <button id="add-note-btn">Add New Note</button>
+                    <select id="note-color">
+                        <option value="#FFEB3B">Yellow</option>
+                        <option value="#81C784">Green</option>
+                        <option value="#64B5F6">Blue</option>
+                        <option value="#E57373">Red</option>
+                        <option value="#BA68C8">Purple</option>
+                    </select>
+                </div>
+                <div class="sticky-notes-container" id="notes-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CodeCircuit - Hackathon Project</p>
+    </footer>
+
+    <script src="../../scripts/theme-switcher.js"></script>
+    <script src="../../scripts/style-helpers.js"></script>
+    <script src="scripts/sticky-notes.js"></script>
+</body>
+</html>
