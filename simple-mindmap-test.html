@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Mind Map Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        button {
+            background-color: #3a36e0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 10px 20px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .mindmap-container {
+            height: 500px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            position: relative;
+            overflow: auto;
+            background-color: #f9f9f9;
+        }
+        
+        .mindmap-node {
+            position: absolute;
+            padding: 10px 15px;
+            background-color: #3a36e0;
+            color: white;
+            border-radius: 8px;
+            min-width: 100px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .mindmap-node.root-node {
+            background-color: #7e74f1;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mindmap-node.selected {
+            box-shadow: 0 0 0 3px white, 0 0 0 5px #3a36e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Mind Map</h1>
+        <div>
+            <button id="add-root-btn">Add Root Node</button>
+            <button id="add-child-btn" disabled>Add Child Node</button>
+            <button id="delete-btn" disabled>Delete Node</button>
+            <button id="clear-btn">Clear All</button>
+        </div>
+        <div id="mindmap-container" class="mindmap-container"></div>
+    </div>
+
+    <script>
+        // Global variables
+        let nodes = [];
+        let connections = [];
+        let selectedNode = null;
+        let nodeCounter = 1;
+
+        // DOM elements
+        const container = document.getElementById('mindmap-container');
+        const addRootBtn = document.getElementById('add-root-btn');
+        const addChildBtn = document.getElementById('add-child-btn');
+        const deleteBtn = document.getElementById('delete-btn');
+        const clearBtn = document.getElementById('clear-btn');
+
+        // Initialize
+        function init() {
+            // Clear everything
+            container.innerHTML = '';
+            nodes = [];
+            connections = [];
+            selectedNode = null;
+            nodeCounter = 1;
+            
+            // Create SVG for connections
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.style.position = 'absolute';
+            svg.style.top = '0';
+            svg.style.left = '0';
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            svg.style.pointerEvents = 'none';
+            svg.style.zIndex = '1';
+            svg.id = 'connections-svg';
+            container.appendChild(svg);
+            
+            // Update buttons
+            updateButtons();
+        }
+
+        // Add root node
+        function addRootNode() {
+            // Create node data
+            const node = {
+                id: nodeCounter++,
+                text: 'Main Topic',
+                x: (container.offsetWidth / 2) - 75,
+                y: (container.offsetHeight / 2) - 75,
+                isRoot: true,
+                parentId: null
+            };
+            
+            // Add to array
+            nodes.push(node);
+            
+            // Create DOM element
+            createNodeElement(node);
+            
+            // Select the node
+            selectNode(node.id);
+            
+            console.log('Root node added:', node);
+        }
+
+        // Add child node
+        function addChildNode() {
+            if (!selectedNode) return;
+            
+            // Calculate position (random offset from parent)
+            const offsetX = Math.random() * 100 + 150;
+            const offsetY = Math.random() * 160 - 80;
+            
+            // Create node data
+            const node = {
+                id: nodeCounter++,
+                text: 'New Idea',
+                x: selectedNode.x + offsetX,
+                y: selectedNode.y + offsetY,
+                isRoot: false,
+                parentId: selectedNode.id
+            };
+            
+            // Add to arrays
+            nodes.push(node);
+            connections.push({
+                from: selectedNode.id,
+                to: node.id
+            });
+            
+            // Create DOM element
+            createNodeElement(node);
+            
+            // Update connections
+            drawConnections();
+            
+            // Select the new node
+            selectNode(node.id);
+            
+            console.log('Child node added:', node);
+        }
+
+        // Delete node
+        function deleteNode() {
+            if (!selectedNode) return;
+            
+            // Find all descendants
+            const nodesToDelete = findNodeAndDescendants(selectedNode.id);
+            
+            // Remove connections
+            connections = connections.filter(conn => 
+                !nodesToDelete.includes(conn.from) && !nodesToDelete.includes(conn.to));
+            
+            // Remove nodes
+            nodes = nodes.filter(node => !nodesToDelete.includes(node.id));
+            
+            // Remove DOM elements
+            nodesToDelete.forEach(nodeId => {
+                const element = document.querySelector(`.mindmap-node[data-id="${nodeId}"]`);
+                if (element) element.remove();
+            });
+            
+            // Clear selection
+            selectedNode = null;
+            
+            // Update UI
+            drawConnections();
+            updateButtons();
+            
+            console.log('Nodes deleted:', nodesToDelete);
+        }
+
+        // Find a node and all its descendants
+        function findNodeAndDescendants(nodeId) {
+            const result = [nodeId];
+            
+            // Find direct children
+            const children = nodes.filter(n => n.parentId === nodeId);
+            
+            // Recursively add all descendants
+            children.forEach(child => {
+                result.push(...findNodeAndDescendants(child.id));
+            });
+            
+            return result;
+        }
+
+        // Create a node element in the DOM
+        function createNodeElement(node) {
+            // Create element
+            const element = document.createElement('div');
+            element.className = 'mindmap-node';
+            if (node.isRoot) element.classList.add('root-node');
+            element.setAttribute('data-id', node.id);
+            element.textContent = node.text;
+            
+            // Position
+            element.style.left = node.x + 'px';
+            element.style.top = node.y + 'px';
+            
+            // Event handlers
+            element.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectNode(node.id);
+            });
+            
+            element.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                editNodeText(node.id);
+            });
+            
+            // Add dragging
+            setupDragging(element, node);
+            
+            // Add to DOM
+            container.appendChild(element);
+        }
+
+        // Make nodes draggable
+        function setupDragging(element, node) {
+            let isDragging = false;
+            let startX, startY;
+            let startNodeX, startNodeY;
+            
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startNodeX = node.x;
+                startNodeY = node.y;
+                element.style.zIndex = '100';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                // Calculate new position
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                
+                // Update node data
+                node.x = startNodeX + dx;
+                node.y = startNodeY + dy;
+                
+                // Update DOM
+                element.style.left = node.x + 'px';
+                element.style.top = node.y + 'px';
+                
+                // Update connections
+                drawConnections();
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    element.style.zIndex = '10';
+                    isDragging = false;
+                }
+            });
+        }
+
+        // Edit node text
+        function editNodeText(nodeId) {
+            const node = nodes.find(n => n.id === nodeId);
+            if (!node) return;
+            
+            const element = document.querySelector(`.mindmap-node[data-id="${nodeId}"]`);
+            if (!element) return;
+            
+            const currentText = node.text;
+            
+            // Create input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.style.width = '90%';
+            input.style.padding = '5px';
+            input.style.textAlign = 'center';
+            input.style.border = 'none';
+            input.style.borderRadius = '4px';
+            
+            // Replace text with input
+            const originalContent = element.innerHTML;
+            element.innerHTML = '';
+            element.appendChild(input);
+            
+            // Focus and select
+            input.focus();
+            input.select();
+            
+            function saveText() {
+                const newText = input.value.trim() || currentText;
+                node.text = newText;
+                element.innerHTML = newText;
+            }
+            
+            // Event handlers
+            input.addEventListener('blur', saveText);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') saveText();
+                if (e.key === 'Escape') element.innerHTML = originalContent;
+            });
+        }
+
+        // Select a node
+        function selectNode(nodeId) {
+            // Find node
+            selectedNode = nodes.find(n => n.id === nodeId);
+            
+            // Update UI
+            document.querySelectorAll('.mindmap-node').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            const element = document.querySelector(`.mindmap-node[data-id="${nodeId}"]`);
+            if (element) {
+                element.classList.add('selected');
+            }
+            
+            // Update buttons
+            updateButtons();
+        }
+
+        // Draw all connections
+        function drawConnections() {
+            const svg = document.getElementById('connections-svg');
+            if (!svg) return;
+            
+            // Clear
+            svg.innerHTML = '';
+            
+            // Draw each connection
+            connections.forEach(conn => {
+                const fromNode = nodes.find(n => n.id === conn.from);
+                const toNode = nodes.find(n => n.id === conn.to);
+                
+                if (!fromNode || !toNode) return;
+                
+                // Calculate centers
+                let fromX, fromY, toX, toY;
+                
+                if (fromNode.isRoot) {
+                    fromX = fromNode.x + 75;
+                    fromY = fromNode.y + 75;
+                } else {
+                    fromX = fromNode.x + 60;
+                    fromY = fromNode.y + 20;
+                }
+                
+                if (toNode.isRoot) {
+                    toX = toNode.x + 75;
+                    toY = toNode.y + 75;
+                } else {
+                    toX = toNode.x + 60;
+                    toY = toNode.y + 20;
+                }
+                
+                // Create line
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', fromX);
+                line.setAttribute('y1', fromY);
+                line.setAttribute('x2', toX);
+                line.setAttribute('y2', toY);
+                line.setAttribute('stroke', '#7e74f1');
+                line.setAttribute('stroke-width', '2');
+                
+                svg.appendChild(line);
+            });
+        }
+
+        // Update button states
+        function updateButtons() {
+            addChildBtn.disabled = !selectedNode;
+            deleteBtn.disabled = !selectedNode;
+        }
+
+        // Set up event handlers
+        addRootBtn.addEventListener('click', addRootNode);
+        addChildBtn.addEventListener('click', addChildNode);
+        deleteBtn.addEventListener('click', deleteNode);
+        clearBtn.addEventListener('click', init);
+        
+        // Clear selection when clicking on background
+        container.addEventListener('click', (e) => {
+            if (e.target === container) {
+                selectedNode = null;
+                document.querySelectorAll('.mindmap-node').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                updateButtons();
+            }
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
